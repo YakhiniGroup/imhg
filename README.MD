@@ -9,6 +9,7 @@ pip install -r requirements.txt
 There are two main usages for this program as described in the paper.  
 The first example shows how to find enriched intervals on GSEA human dataset.  
 For your convenience, we have included the GSEA human dataset json bundle in the 'assets' folder. However, any other GSEA json bundle will be accepted as well.  
+All of the below code is available in the 'GSEA/main.py' file.  
 you can run the following command to find enriched intervals on the GSEA human dataset:  
 First define the path to the GSEA human dataset json bundle:  
 ```python
@@ -31,9 +32,32 @@ from GSEA.main import dump_results_to_excel
 dump_results_to_excel(results, excel_name="results.xlsx", start=0, end=None)
 ```
 Note, the 'start' and 'end' parameters are used to limit the number of experiments to be exported.  
-Set end to None to export all experiments.
+Set end to None to export all experiments.  
+
+The second example shows how to find enriched intervals on a custom differential expression data.  
+The full code for the following examples are visible in the 'DifferentialExpression/lung_cancer_experiment.py' and 'DifferentialExpression/breast_cancer_experiment.py' files.  
+To test the program on a manual collected data, you will have to define your results file according to the following format:
+```python
+{
+    "experiment_name_1": {
+            "gene_name_1": "differential_expression_value",
+            "gene_name_2": "differential_expression_value",
+            "gene_name_3": "differential_expression_value",
+            ...
+        },
+    "experiment_name_2": {
+            "gene_name_1": "differential_expression_value",
+            "gene_name_2": "differential_expression_value",
+            "gene_name_3": "differential_expression_value",
+            ...
+        }
+}
+```
+Note, full implementation details can be found on the 'start_experiment' method.  
+Then, after defining the number of genes to be included in the analysis (see paper for more details), run the following code:  
+```python
+start_experiment(data_path, output_directory, interest_gene_sizes)
+```
 
 ## Reference
 TBD
-
-## Notes
