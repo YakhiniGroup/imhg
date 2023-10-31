@@ -58,6 +58,11 @@ Then, after defining the number of genes to be included in the analysis (see pap
 ```python
 start_experiment(data_path, output_directory, interest_gene_sizes)
 ```
-
+Note, the `breast_cancer_experiment.py` and the `lung_cancer_experiment.py` files are examples of how to use the program on a custom differential expression data.  
+However, despite the common goal, these two files includes slightly different implementations due to different data sources.  
+These files are not meant to be used as a general purpose tool, but rather as a reference for how to use the program on a custom differential expression data.  
+Any other formatted data source will require minor adjustments to the code, but, after initial preprocessing, one can use the object `DifferentiallyExpressedGenes`  
+to generate the reduced chromosome and run the analysis.  
+The results will be saved to a csv file in the output directory. 
 ## Reference
 TBD

@@ -55,7 +55,7 @@ def preprocess_dataset(dataset, experiment_name, geo_path):
             f.write(r[0] + " " + str(r[1]) + "\n")
 
 
-def start_experiment(data_path, local_geos_path, output_directory):
+def start_experiment(data_path, local_geos_path, output_directory, experiment_range):
     """
     This function is used to run the experiment on the lung cancer dataset
     :param data_path: The path to the data file. the data file should be a json file with the following format:
@@ -68,10 +68,9 @@ def start_experiment(data_path, local_geos_path, output_directory):
     https://www.ncbi.nlm.nih.gov. For every experiment we downloaded its <experiment_name>_family.soft.gz file.
     The local_geos_path should be a mapping between experiment_name to its corresponding GEO file.
     :param output_directory: The directory to save the results
+    :param experiment_range: List of integers. Each integer represents the number of genes to use in the experiment. (See paper for more details)
     """
     data = preprocess(data_path)
-
-    experiment_range = list(range(400, 1200, 400))
 
     for experiment_name in data.keys():
         print("Experiment: {}".format(experiment_name))
@@ -92,7 +91,8 @@ def main():
     data_path = ""  # The user should supply the data path
     local_geo_paths = {}  # The user should supply the local GEO paths
     output_directory = "enriched_genes/lung_cancer"
-    start_experiment(data_path, local_geo_paths, output_directory)
+    interest_gene_sizes = list(range(400, 1200, 400))
+    start_experiment(data_path, local_geo_paths, output_directory, interest_gene_sizes)
 
 
 if __name__ == '__main__':
