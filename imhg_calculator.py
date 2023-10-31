@@ -48,6 +48,10 @@ class imHGCalculator(object):
         return min_val, indexes
 
     def calculate_p_value(self, N, B, p):
+        """
+        The following method calculates the p-value of the given N,B,p params.
+        For more information about the algorithm, please refer to the paper.
+        """
         arr = [[0] * (B + 1) for _ in range(N + 1)]
         arr[0][0] = 1
         for n in range(1, N + 1):
@@ -80,6 +84,12 @@ class imHGCalculator(object):
         return result
 
     def _increase_p_val_calculation_precision(self, N, B, arr):
+        """
+        The following method increases the precision of the p-value calculation.
+        Due to the fact that the p-value is very small, the calculated p-value might be zero
+        because of the precision of the calculation. To overcome this issue, we increase the
+        precision of the calculation.
+        """
         for i in range(1, 4):
             getcontext().prec = self.default_precision + i * 20
             result = Decimal(1 - (Decimal((arr[N][B]) / utils.binomial_coefficient(N, B))))

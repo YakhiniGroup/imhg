@@ -1,7 +1,9 @@
 import datetime
 import json
-
+from decimal import Decimal
+import os
 import numpy as np
+import pandas as pd
 
 import utils
 from chromosomes import chromosomes
@@ -18,9 +20,51 @@ def create_dict():
     return genome
 
 
-def run_gsea_human_analysis():
+def find_set_extra_special_chromosomes(results, set_name):
+    return np.asarray([chromosome for chromosome in results if chromosome[0] == set_name])
+
+
+def get_parsed_data(data):
+    data = [[*d[0:2], Decimal("{:.4g}".format(Decimal(d[2]))), *d[3:]] for d in data]
+    data.sort(key=lambda x: x[2])
+    filtered = []
+    exclude = ["AMPLIFIED", "DELETION", "AMPLICON", "DELETED"]
+    for val in data:
+        name = val[0]
+        if name.startswith("chr"):
+            continue
+        if any(word in name for word in exclude):
+            continue
+        filtered.append(val)
+
+    n = np.asarray(filtered)
+    new_col = list((n[:, 4] / n[:, 7]) * 100)
+    b_to_tot_b_ratio = np.asarray([float("{:.3f}".format(x)) for x in new_col])
+    new_col = list(n[:, 0])
+    extra_special_chromosomes = np.asarray([len(find_set_extra_special_chromosomes(n, name)) for name in new_col])
+    n = np.hstack((n, b_to_tot_b_ratio.reshape(-1, 1)))
+    n = np.hstack((n, extra_special_chromosomes.reshape(-1, 1)))
+    return n
+
+
+def dump_results_to_excel(results, excel_name="results.xlsx", start=0, end=None):
+    df = raw_results_to_df(results, start, end)
+    writer = pd.ExcelWriter(excel_name)
+    df.to_excel(writer, 'Genomic analysis', index=False)
+    writer.close()
+
+
+def raw_results_to_df(results, start=0, end=None):
+    df = pd.DataFrame(results[start:end],
+                      columns=["Set", "Chromosome", "p-value", "Length", "b", "B", "N", "total_B", "indices",
+                               "b_to_Tot_B_ratio", "number_of_enriched_genomic_intervals"])
+    df['lift'] = (df['b'] / df['Length']) / (df['B'] / df['N'])
+    return df
+
+
+def run_gsea_human_analysis(gsea_all_gene_set_json_bundle_path):
     print('Running GSEA human analysis')
-    with open("/Users/shahar.mor/Downloads/msigdb.v2023.1.Hs.json", "r") as f:
+    with open(gsea_all_gene_set_json_bundle_path, "r") as f:
         data = json.load(f)
     keys = list(data.keys())
     genes = {}
@@ -88,10 +132,14 @@ def run_gsea_human_analysis():
                 print("Failed to calculate {} for chromosome {} with error: {}".format(gene, i, e))
 
     print("Done")
+    return get_parsed_data(p_val_results)
 
 
 def main():
-    run_gsea_human_analysis()
+    gsea_json_path = "assets/msigdb.v2023.1.Hs.json"
+    results = run_gsea_human_analysis(gsea_json_path)
+    parsed_results_df = raw_results_to_df(results, start=0, end=None)
+    dump_results_to_excel(results, excel_name="results.xlsx", start=0, end=None)
 
 
 if __name__ == '__main__':
