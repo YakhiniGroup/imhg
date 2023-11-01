@@ -40,7 +40,7 @@ def start_experiment(data_path, output_directory, experiment_range):
 
 
 def main():
-    data_path = "/Users/shahar.mor/Downloads/genes.json"  # The user should provide the path to the data
+    data_path = ""  # The user should provide the path to the data
     output_directory = "enriched_genes/breast_cancer"
     interest_gene_sizes = list(range(400, 1200, 400))
     start_experiment(data_path, output_directory, interest_gene_sizes)
