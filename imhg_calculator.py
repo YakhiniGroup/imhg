@@ -13,9 +13,9 @@ class imHGCalculator(object):
 
     def calculate_imhg(self, N, B, lamda):
         """
-        :param N: Number of genes in the chromosome
-        :param B: Number of active genes in the chromosome
-        :param lamda: chromosome as a tuple of 0s and 1s
+        :param N: The binary vector length (e.g., number of genes in the chromosome)
+        :param B: Number of 1s in the binary vector (e.g., number of active genes in the chromosome)
+        :param lamda: The binary vector as a tuple of 0s and 1s
         """
         min_val = None
         indexes = (-1, -1)
