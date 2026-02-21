@@ -64,5 +64,32 @@ These files are not meant to be used as a general purpose tool, but rather as a 
 Any other formatted data source will require minor adjustments to the code, but, after initial preprocessing, one can use the object `DifferentiallyExpressedGenes`  
 to generate the reduced chromosome and run the analysis.  
 The results will be saved to a csv file in the output directory. 
+
+## Simulation Experiments
+The `simulation_experiment.py` script provides tools for evaluating the imHG algorithm through simulation studies.
+
+### Basic Simulation
+Run a single simulation with default parameters (N=1000, Pin=0.7, Pout=0.1):
+```bash
+python simulation_experiment.py
+```
+
+With custom parameters:
+```bash
+python simulation_experiment.py --N 1000 --Pin 0.7 --Pout 0.1 --seed 42
+```
+
+### Figure 1A: Power Analysis
+Generate a power analysis figure showing detection probability as a function of signal strength:
+```bash
+python simulation_experiment.py --power-analysis --n-simulations 100 --alpha 0.0001
+```
+
+Parameters:
+- `--n-simulations`: Number of simulations per condition (default: 100)
+- `--alpha`: Significance threshold (default: 0.05)
+- `--n-jobs`: Number of parallel workers (default: all CPU cores)
+- `--output-dir`: Output directory for figures (default: output)
+
 ## Reference
 TBD
